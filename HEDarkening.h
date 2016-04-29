@@ -12,6 +12,12 @@ class HEDarkening {
   double getFlukaDose(int eta, int layer);
   int getYearsForLumi(double iL);
   double degradation(double iLumi, int iEta, int iLayer);
+  static const char* scenarioDescription (unsigned int scenario);
+ // (1) number of HE ieta bins for darkening
+  static const unsigned int nEtaBins = 14;
+ // // (2) max. number of HE scint. layers
+  static const unsigned int nScintLayers = 19;
+ 
  private:
   int ieta_shift;
   //Note: following arrays are parallel.
@@ -20,9 +26,9 @@ class HEDarkening {
   //int    year[9];
   //double lumi[9];
   //double doserate[9];
-  static const unsigned int Nieta = 14;
-  static const unsigned int Nlayer = 18;
-  double doseMap [Nieta][Nlayer];
+ // static const unsigned int Nieta = 14;
+ // static const unsigned int Nlayer = 18;
+  double doseMap [nEtaBins][nScintLayers];
   int getYearIndex(int y);
   
   int year[9];//={2011,2012,2015,2016,2017, 2018, 2021, 2022, 2023};

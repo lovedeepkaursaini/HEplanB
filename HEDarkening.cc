@@ -18,7 +18,7 @@ HEDarkening::HEDarkening(unsigned int scenario) :
   bConst = 0.6;                                                                                                                                                     
   
   //Hardcode the filename for the time being.
-  const double _doseMap [Nieta][Nlayer] = {
+  const double _doseMap [nEtaBins][nScintLayers] = {
     {2.500000E+00, 0.000000E+00, 0.000000E+00, 3.116667E-06, 3.133333E-06, 2.050000E-06, 9.166667E-07, 4.000000E-07, 4.000000E-07, 0.000000E+00, 0.000000E+00, 0.000000E+00, 0.000000E+00, 0.000000E+00, 0.000000E+00, 0.000000E+00, 0.000000E+00, 0.000000E+00},
     {2.075000E-05, 2.805000E-05, 1.775000E-05, 2.068333E-05, 7.566667E-06, 5.883333E-06, 3.216667E-06, 1.883333E-06, 6.000000E-07, 4.333333E-07, 3.333333E-07, 2.000000E-07, 3.333333E-08, 1.333333E-07, 0.000000E+00, 0.000000E+00, 0.000000E+00, 0.000000E+00},
     {9.990000E-05, 6.360000E-05, 4.546667E-05, 2.083333E-05, 1.463333E-05, 1.200000E-05, 7.750000E-06, 5.366667E-06, 4.466667E-06, 1.400000E-06, 8.500000E-07, 1.666667E-07, 2.166667E-07, 1.833333E-07, 6.666667E-08, 1.666667E-08, 0.000000E+00, 0.000000E+00},
@@ -36,8 +36,8 @@ HEDarkening::HEDarkening(unsigned int scenario) :
     
   };
 
-  for(unsigned int iR=0;iR<Nieta;iR++){
-    for(unsigned int iC=0;iC<Nlayer;iC++){
+  for(unsigned int iR=0;iR<nEtaBins;iR++){
+    for(unsigned int iC=0;iC<nScintLayers;iC++){
          doseMap[iR][iC] = _doseMap[iR][iC];
     }
   }
@@ -112,8 +112,8 @@ double HEDarkening::degradation(int firstYear, int currYear, int ieta, int layer
   //shift ieta tower index
   ieta -= ieta_shift;
   //if outside eta range, no darkening
-  if(ieta < 0 || ieta >= (int)Nieta) {cout<<"tower # "<<ieta<<" > "<<Nieta<<" known? "<<std::endl;return 1.;}
-  if(layer < 0 || layer >= (int)Nlayer){cout<<"layer # "<<layer<<" > "<<Nlayer<<" known? "<<std::endl; return 1.;}
+  if(ieta < 0 || ieta >= (int)nEtaBins) {cout<<"tower # "<<ieta<<" > "<<nEtaBins<<" known? "<<std::endl;return 1.;}
+  if(layer < 0 || layer >= (int)nScintLayers){cout<<"layer # "<<layer<<" > "<<nScintLayers<<" known? "<<std::endl; return 1.;}
   
   //  if (lumiscale[ieta][lay] == 0) return 1.;
   //Calculate darkening factor: accumulated over years.
@@ -138,3 +138,10 @@ int HEDarkening::getYearIndex(const int y) {
   }
 }
 
+const char* HEDarkening::scenarioDescription (unsigned int scenario) {
+ if (scenario == 0) return "full replacement of HE scintillators, no darkening";
+ else if (scenario == 1) return "no replacement, full stage darkening";
+ else if (scenario == 2) return "only replace scintillators with expected light yield < 20% for 500 fb-1";
+ else if (scenario == 3) return "replace complete megatiles only in the front 4 layers";
+ return "undefined scenario: assume no replacement, full stage darkening";
+}
