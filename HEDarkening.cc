@@ -1,4 +1,4 @@
-#include "DataFormats/HcalCalibObjects/interface/HEDarkening.h"
+#include "HEDarkening.h"
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -81,52 +81,76 @@ double HEDarkening::standAloneResponse(int year, int ieta, int layer){
 }
 
 int HEDarkening::getYearsForLumi(double iL){
-  //  int index=-999;
-  int past = 0;
-  for(int i = 0; i!=9; i++){
-    if (iL>= past && iL<ilumi[i]){
-      float left = iL-past;
-      float right = ilumi[i]-iL;
-      if (left<right) return year[i-1];
-      else return year[i];
-   }
-    else {
-      past = ilumi[i];
-    }
+  // How many years have passed by
+  int i = 0;
+  while(iL>ilumi[i]){
+  	if (i==8)break;
+	i++;
   }
- 
-    return year[8];
- 
+  i=i-1;
+  int yr = year[i];
+  //If the year is 2023 simply return 0 months.
+  if (yr==2023) return 100*yr;
+  
+  //Now let us find the months over that.
+  double furk = iL-ilumi[i];
+  //  int months = furk*(12./(ilumi[i+1]-ilumi[i]));
+  int months = furk*12./lumi[i+1];
+  return 100*yr+months;
 }
 
+// int HEDarkening::getYearsForLumi(double iL){
+//   //  int index=-999;
+//   int past = 0;
+//   for(int i = 0; i!=9; i++){
+//     if (iL>= past && iL<ilumi[i]){
+//       float left = iL-past;
+//       float right = ilumi[i]-iL;
+//       if (left<right) return year[i-1];
+//       else return year[i];
+//    }
+//     else {
+//       past = ilumi[i];
+//     }
+//   }
+ 
+//     return year[8];
+ 
+// }
 
-double HEDarkening::degradation(double iLumi, int iEta, int iLayer){
+
+double HEDarkening::degradation(double iLumi, int ieta, int ilayer){
   int firstYear = 2011;
-  int currYear = getYearsForLumi(iLumi);
-  return degradation(firstYear,currYear,iEta,iLayer);
-}
-
-double HEDarkening::degradation(int firstYear, int currYear, int ieta, int layer){
-  std::cout<<currYear<<std::endl;
-  // if (currYear<2011 || currYear == 2013 || currYear ==14 || currYear == 2019 || currYear ==20 || currYear > 2023 )return 1; //No darkening
+  int yearMonth = getYearsForLumi(iLumi);
+  //Extract year and month
+  int currYear = (int)yearMonth/100;
+  int months = yearMonth-currYear*100;
   //shift ieta tower index
   ieta -= ieta_shift;
   //if outside eta range, no darkening
   if(ieta < 0 || ieta >= (int)nEtaBins) {cout<<"tower # "<<ieta<<" > "<<nEtaBins<<" known? "<<std::endl;return 1.;}
-  if(layer < 0 || layer >= (int)nScintLayers){cout<<"layer # "<<layer<<" > "<<nScintLayers<<" known? "<<std::endl; return 1.;}
+  if(ilayer < 0 || ilayer >= (int)nScintLayers){cout<<"layer # "<<ilayer<<" > "<<nScintLayers<<" known? "<<std::endl; return 1.;}
   
-  //  if (lumiscale[ieta][lay] == 0) return 1.;
   //Calculate darkening factor: accumulated over years.
-  double response = 1;
-  for (int yr = firstYear; yr<currYear+1; yr++){
-    //std::cout<<"response: "<<response<<std::endl;
-    response = response*standAloneResponse(yr,ieta,layer);
-  }
+  //Now comes the serious bussiness...
+  double response = 1.;
+  //... damage through the past years.
+  for (int yr=firstYear; yr<currYear+1; yr++)
+    response = response*standAloneResponse(yr,ieta,ilayer);
+  if (currYear==2023) return response;
   
- // cout<< "I m in degradation for year: "<< currYear <<", tower # "<<ieta+ieta_shift<<", layer: "<<layer<<", resp: "<<response<<endl;
- // cout<<"degradation: .... "<<endl;
+  
+  //This year's bussiness.. damage in current year so far
+  int i = 0; //index of last year passed year.
+  while(! (year[i]==currYear)) i++;
+  double lumiSoFar = iLumi - ilumi[i];
+
+  double dR = doserate[i+1];
+  double dose = getFlukaDose(ieta,ilayer);
+  double decayConst =  aConst*std::pow((1000*dose*dR),bConst);
+  response = response*exp(-(lumiSoFar*dose)/decayConst);
   return response;
-  //return (exp(-intlumi/lumiscale[ieta][lay]));
+
 }
 
 int HEDarkening::getYearIndex(const int y) {
@@ -145,3 +169,19 @@ const char* HEDarkening::scenarioDescription (unsigned int scenario) {
  else if (scenario == 3) return "replace complete megatiles only in the front 4 layers";
  return "undefined scenario: assume no replacement, full stage darkening";
 }
+
+int main(){
+
+  HEDarkening h(1);
+  // for (int t=29; t<30; t++){
+  //  for (int i=0; i<18; i++){
+  //      std::cout<< h.degradation(2011,2023,29,0)<<std::endl;
+  //std::cout<<h.getYearsForLumi(100)<<std::endl;
+   std::cout<<h.degradation(100,29,0)<<std::endl;
+   std::cout<<h.degradation(493,29,0)<<std::endl;
+   std::cout<<h.degradation(500,29,0)<<std::endl;
+   //  std::cout<<h.degradation(2011,2023,29,0)<<std::endl;
+      // }
+      // }
+}
+
