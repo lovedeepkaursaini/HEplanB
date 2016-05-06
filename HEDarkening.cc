@@ -83,9 +83,10 @@ double HEDarkening::standAloneResponse(int year, int ieta, int layer){
 int HEDarkening::getYearsForLumi(double iL){
   // How many years have passed by
   int i = 0;
-  while(iL>ilumi[i]){
-  	if (i==8)break;
-	i++;
+  while(iL>=ilumi[i]){
+  
+    i++;
+    if (i>8)break;  
   }
   i=i-1;
   int yr = year[i];
@@ -144,7 +145,7 @@ double HEDarkening::degradation(double iLumi, int ieta, int ilayer){
   int i = 0; //index of last year passed year.
   while(! (year[i]==currYear)) i++;
   double lumiSoFar = iLumi - ilumi[i];
-
+  //cout<<"left over lumi: "<<lumiSoFar<<endl;
   double dR = doserate[i+1];
   double dose = getFlukaDose(ieta,ilayer);
   double decayConst =  aConst*std::pow((1000*dose*dR),bConst);
@@ -176,7 +177,8 @@ int main(){
   // for (int t=29; t<30; t++){
   //  for (int i=0; i<18; i++){
   //      std::cout<< h.degradation(2011,2023,29,0)<<std::endl;
-  //std::cout<<h.getYearsForLumi(100)<<std::endl;
+  std::cout<<h.getYearsForLumi(500)<<std::endl;
+  std::cout<<h.getYearsForLumi(493)<<std::endl;
    std::cout<<h.degradation(100,29,0)<<std::endl;
    std::cout<<h.degradation(493,29,0)<<std::endl;
    std::cout<<h.degradation(500,29,0)<<std::endl;
