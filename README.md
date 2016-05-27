@@ -16,5 +16,6 @@ git clone git@github.com:kpedro88/JetMETAnalysis --branch RadDam1
 git clone git@github.com:kpedro88/Analysis
 scram b -j 6
 git cms-addpkg DataFormats
+git cms-addpkg CalibCalorimetry/HcalPlugins
 
 
