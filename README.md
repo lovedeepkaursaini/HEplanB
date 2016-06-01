@@ -29,4 +29,6 @@ git cms-addpkg DataFormats/HcalCalibObjects
 
 git cms-addpkg CalibCalorimetry/HcalPlugins
 
+scram b -j 6
+
 
