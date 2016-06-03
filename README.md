@@ -31,4 +31,6 @@ git cms-addpkg CalibCalorimetry/HcalPlugins
 
 scram b -j 6
 
+cd HERadDamJets/FullSim/test/
 
+./FStemp.sh DiJet_GEN_SIM . . 19 30 0 10 1 run 
