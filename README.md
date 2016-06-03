@@ -27,6 +27,16 @@ git cms-addpkg DataFormats/HcalCalibObjects
 
 git cms-addpkg CalibCalorimetry/HcalPlugins
 
+git cms-addpkg SimGeneral/DataMixingModule
+
+git cms-addpkg SimG4CMS/Calo
+
+git cms-addpkg SimG4CMS/HcalTestBeam
+
+git cms-addpkg SimCalorimetry/HcalSimProducers
+
+git cms-addpkg Validation/HcalHits
+
 scram b -j 6
 
 cd HERadDamJets/FullSim/test/
