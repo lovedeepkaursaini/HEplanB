@@ -5,11 +5,11 @@ class HEDarkening {
  public:
   HEDarkening(unsigned int scenario);
   ~HEDarkening();
-  double degradation(int firstYear, int currYear, int ieta, int layer) ;
   double standAloneResponse(int year, int ieta, int layer);
   double getLumi(int year);
   double getLumiRate(int year);
-  double getFlukaDose(int eta, int layer);
+  double getFlukaDose_4TeV(int eta, int layer);
+  double getFlukaDose_7TeV(int eta, int layer);
   int getYearsForLumi(double iL);
   double degradation(double iLumi, int iEta, int iLayer);
   static const char* scenarioDescription (unsigned int scenario);
@@ -28,7 +28,8 @@ class HEDarkening {
   //double doserate[9];
  // static const unsigned int Nieta = 14;
  // static const unsigned int Nlayer = 18;
-  double doseMap [nEtaBins][nScintLayers];
+  double doseMap_4TeV [nEtaBins][nScintLayers];
+  double doseMap_7TeV [nEtaBins][nScintLayers];
   int getYearIndex(int y);
   
   int year[14];//={2011,2012,2015,2016,2017, 2018, 2021, 2022, 2023};
