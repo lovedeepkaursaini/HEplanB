@@ -37,8 +37,49 @@ git cms-addpkg SimCalorimetry/HcalSimProducers
 
 git cms-addpkg Validation/HcalHits
 
+git clone https://github.com/lovedeepkaursaini/HEplanB/
+
+cp HEplanB/HEDarkening.cc DataFormats/HcalCalibObjects/src/
+
+cp HEplanB/HEDarkening.h DataFormats/HcalCalibObjects/interface/
+
 scram b -j 6
 
 cd HERadDamJets/FullSim/test/
 
+#a temporary interactive run to check setup
+
 ./FStemp.sh DiJet_GEN_SIM . . 19 30 0 10 1 run 
+
+#for running jobs on condor
+
+##remeber to edit path names
+
+##To digitize and reconstruct QCD DiJet events:
+
+./FSsub_digireco.sh (edit path)
+
+##To compute L2L3 jet energy corrections:
+
+./FSsub_JRA.sh
+./run_jec.sh
+
+##To run the jet analyzer:
+
+./FSsub_tree.sh
+
+##To make plots:
+
+./hadd_tree_jet.sh
+root -b -l -q 'fs_jet_comp.C+(-1,true)'
+
+##A file edited to make plots mentioned by Marek in Aug https://github.com/lovedeepkaursaini/HEplanB/blob/master/reso_fit_vs_eta__pt30_PF_2019__lumi0__lumi150__lumi300__lumi500__lumi500.png
+
+#get my macro from here:
+
+https://github.com/lovedeepkaursaini/HEplanB/blob/master/fs_jet_comp.C
+
+root -b -l -q 'fs_jet_comp.C+(1,true)'
+
+
+
