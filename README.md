@@ -1,10 +1,5 @@
-# HEplanB
-
-class to go into dataformats
-
-
-Depth SEg: Geometry/HcalCommonData/data/PhaseI/hcalRecNumbering.xml
-
+# Setup for HE radiation damage jet study
+```
 source ~/setuafenv
 
 cmsrel CMSSW_6_2_0_SLHC25_patch3
@@ -12,6 +7,7 @@ cmsrel CMSSW_6_2_0_SLHC25_patch3
 cd CMSSW_6_2_0_SLHC25_patch3/src/
 
 cmsenv
+```
 
 git cms-merge-topic -u bsunanda:Run2-hcx09
 
@@ -81,5 +77,6 @@ https://github.com/lovedeepkaursaini/HEplanB/blob/master/fs_jet_comp.C
 
 root -b -l -q 'fs_jet_comp.C+(1,true)'
 
-
+#### NOTES
+- class to go into dataformats i.e. Depth SEg: Geometry/HcalCommonData/data/PhaseI/hcalRecNumbering.xml
 
