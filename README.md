@@ -1,11 +1,8 @@
 # Setup for HE radiation damage jet study
 ```
 source ~/setuafenv
-
 cmsrel CMSSW_6_2_0_SLHC25_patch3
-
 cd CMSSW_6_2_0_SLHC25_patch3/src/
-
 cmsenv
 ```
 
