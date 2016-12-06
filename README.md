@@ -20,8 +20,15 @@ git clone https://github.com/lovedeepkaursaini/HEplanB/
 cp HEplanB/HEDarkening.cc DataFormats/HcalCalibObjects/src/
 cp HEplanB/HEDarkening.h DataFormats/HcalCalibObjects/interface/
 scram b -j 6
+```
+
+## to get rid off error from class version, Increment ClassVersion to 1 and assign it to checksum ------
+```
+scram build updateclassversion
+vi DataFormats/HcalCalibObjects/src/classes_def.xml
 cd HERadDamJets/FullSim/test/
 ```
+
 ##a temporary interactive run to check setup
 ```
 ./FStemp.sh DiJet_GEN_SIM . . 19 30 0 10 1 run 
