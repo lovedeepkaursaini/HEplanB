@@ -1,4 +1,4 @@
-#include "HEDarkening.h"
+#include "DataFormats/HcalCalibObjects/interface/HEDarkening.h"
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -139,6 +139,7 @@ int HEDarkening::getYearsForLumi(double iL){
 }
 
 double HEDarkening::degradation(double iLumi, int ieta, int ilayer){
+  //cout<<" Hey I am here in HEDarkening::degradation ---------- YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY "<<endl;
   int firstYear = 2010;
   int yearMonth = getYearsForLumi(iLumi);
   //Extract year and month
@@ -160,6 +161,8 @@ double HEDarkening::degradation(double iLumi, int ieta, int ilayer){
   //... damage through the past years.
   for (int yr=firstYear; yr<currYear+1; yr++)
     response = response*standAloneResponse(yr,ieta,ilayer);
+
+  //std::cout<<"PAHLA:  mere numbers: lumi: "<<iLumi<<", ieta: "<<ieta<<", ilayer: "<<ilayer<<", response: "<<response<<std::endl;
   
   //damage in left over months
   int i = 0; //index of year passed year.
@@ -177,6 +180,7 @@ double HEDarkening::degradation(double iLumi, int ieta, int ilayer){
     double decayConst =  aConst*std::pow((1000*dose*dR),bConst);
     response = response*exp(-(lumiSoFar*dose)/decayConst);
   }
+ // std::cout<<"???????????????????? mere numbers: lumi: "<<iLumi<<", ieta: "<<ieta<<", ilayer: "<<ilayer<<", response: "<<response<<std::endl;
   return response;
   
 }
@@ -198,36 +202,3 @@ const char* HEDarkening::scenarioDescription (unsigned int scenario) {
  return "undefined scenario: assume no replacement, full stage darkening";
 }
 
-
-double roundTo100(double floatValue)
-{
-  return double(int(floatValue * 1000 + 0.5)) / 1000; 
-}
-
-void testHEDarkening(){
-  
-  TFile *f = new TFile("kieDoseMap.root","RECREATE");
-  TH2F *hResp_153 = new TH2F("hResp_153","Response",18,0,18,14,16,30);
-  
-  HEDarkening h(1);
-  // for (int t=29; t<30; t++){
-  //  for (int i=0; i<18; i++){
-  //      std::cout<< h.degradation(2011,2023,29,0)<<std::endl;
-  std::cout<<h.getYearsForLumi(500)<<std::endl;
-  std::cout<<h.degradation(153,29,0)<<std::endl;
-  std::cout<<h.degradation(500,29,0)<<std::endl;
-  //std::cout<<h.degradation(2011,2023,29,0)<<std::endl;
-  // }
-  // }
-  //Initialize the response histogram.
-  for (int Y=0; Y<14; Y++){
-    for(int X=0; X<18; X++){
-      double degn = h.degradation(153,Y+16,X);
-      cout<<roundTo100(degn)<<endl;
-      hResp_153->SetBinContent(X+1,Y+1,roundTo100(degn));
-    }
-  }
-  hResp_153->Write();
-  f->Write();
-  f->Close();
-}
