@@ -26,6 +26,11 @@ scram b -j 6
 ```
 scram build updateclassversion
 vi DataFormats/HcalCalibObjects/src/classes_def.xml
+---------------------
+you will see something:
+<class name="HEDarkening" ClassVersion="0">
+   <version ClassVersion="1" checksum="535394469"/>
+---------------------
 cd HERadDamJets/FullSim/test/
 ```
 
