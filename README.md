@@ -40,6 +40,12 @@ cd HERadDamJets/FullSim/test/
 ```
 ##for running jobs on condor
 - remeber to edit path names
+- My output for latest rad-dam model is here:
+/store/user/lovedeep/newestraddam
+
+- previous radam model
+/store/user/lovedeep/newraddam
+
 
 ###To digitize and reconstruct QCD DiJet events:
 ```
