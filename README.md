@@ -51,6 +51,8 @@ cd HERadDamJets/FullSim/test/
 ```
 ./FSsub_digireco.sh (edit path)
 ```
+- this internally links to DiJet_DIGI_RECO_temp_cfg.py
+
 ###To compute L2L3 jet energy corrections:
 ```
 ./FSsub_JRA.sh
